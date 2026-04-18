@@ -1,6 +1,7 @@
 using Backend.Services.CountryNormalization;
 using Backend.Services.Database;
 using Backend.Services.StatService;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace Backend.Tests;
@@ -43,7 +44,8 @@ public class CountryPopulationAggregatorTests
         var aggregator = new CountryPopulationAggregator(
             statServiceMock.Object,
             dbServiceMock.Object,
-            countryNormalizationServiceMock.Object);
+            countryNormalizationServiceMock.Object,
+            NullLogger<CountryPopulationAggregator>.Instance);
 
         using var output = new StringWriter();
         var originalConsoleOut = Console.Out;

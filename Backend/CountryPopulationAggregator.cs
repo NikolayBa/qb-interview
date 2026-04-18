@@ -1,6 +1,8 @@
 ﻿using Backend.Services.CountryNormalization;
 using Backend.Services.Database;
 using Backend.Services.StatService;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +15,23 @@ namespace Backend
 		private readonly IStatService statService;
 		private readonly IDbService dbService;
 		private readonly ICountryNormalizationService countryNormalizationService;
+		private readonly ILogger<CountryPopulationAggregator> logger;
+
 		public CountryPopulationAggregator(IStatService statService,
 										IDbService dbService,
-										ICountryNormalizationService countryNormalizationService)
+										ICountryNormalizationService countryNormalizationService,
+										ILogger<CountryPopulationAggregator> logger)
 		{
 			this.statService = statService;
 			this.dbService = dbService;
 			this.countryNormalizationService = countryNormalizationService;
+			this.logger = logger;
 		}
 
 		public async Task AggregatePopulationData()
 		{
+			logger.LogInformation("------------------Retrieving data:-------------------");
+
 			// Start both tasks simultaneously
 			Task<Dictionary<string, long>> countryMapFromDbTask = dbService.GetCountryPopulationFromDbAsync();
 			Task<List<Tuple<string, int>>> apiCountryMappingsTask = statService.GetCountryPopulationsAsync();
@@ -33,7 +41,10 @@ namespace Backend
 
 			// Assign results
 			Dictionary<string, long> countryMapFromDb = await countryMapFromDbTask;
+			logger.LogInformation($"{countryMapFromDb.Count} records retrieved from the database");
+
 			List<Tuple<string, int>> apiCountryMappings = await apiCountryMappingsTask;
+			logger.LogInformation($"{apiCountryMappings.Count} records retrieved from the API");
 
 			// Since DB result is the source of truth, we can iterate over the API results in O(N) time
 			foreach (Tuple<string, int> countryTuple in apiCountryMappings)
@@ -44,6 +55,10 @@ namespace Backend
 				if (!countryMapFromDb.ContainsKey(normalizedCountryName))
 				{
 					countryMapFromDb[normalizedCountryName] = countryTuple.Item2;
+				}
+				else
+				{
+					logger.LogInformation($"{normalizedCountryName} already exists in db, skipping..");
 				}
 			}
 

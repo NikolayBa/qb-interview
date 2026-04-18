@@ -10,3 +10,8 @@ Backend.sln.DotSettings.user
 *.suo
 *.userosscache
 *.sln.docstates
+
+# Logging
+Backend/logs/
+/logs/
+*.log
