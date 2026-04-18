@@ -11,18 +11,18 @@ namespace Backend.Services.Database;
 
 public class DbService : IDbService
 {
-
-    // Most optimal GROUP by to calculate populations from all cities.
+    // Most optimal db query - GROUP BY to calculate populations from all countries, by joining cities and states
     // Since SQLLite returns the Sum result as a double, we need cast it back as INT
+    // using interpolation with model property names for columns for easier maintenance
     
-    private const string CountryPopulationSql = @"
+    private static readonly string CountryPopulationSql = $@"
         SELECT
-            co.CountryName AS CountryName,
-            CAST(SUM(ci.Population) AS INTEGER) AS Population
-        FROM City ci
-        JOIN State s ON ci.StateId = s.StateId
-        JOIN Country co ON s.CountryId = co.CountryId
-        GROUP BY co.CountryId, co.CountryName;";
+            co.{nameof(Country.CountryName)} AS {nameof(CountryPopulationAggregate.CountryName)},
+            CAST(SUM(ci.{nameof(City.Population)}) AS INTEGER) AS {nameof(CountryPopulationAggregate.Population)}
+        FROM {nameof(City)} ci
+        JOIN {nameof(State)} s ON ci.{nameof(City.StateId)} = s.{nameof(State.StateId)}
+        JOIN {nameof(Country)} co ON s.{nameof(State.CountryId)} = co.{nameof(Country.CountryId)}
+        GROUP BY co.{nameof(Country.CountryId)}, co.{nameof(Country.CountryName)};";
 
     private readonly IDbManager dbManager;
     private readonly ICountryNormalizationService countryNormalizationService;
