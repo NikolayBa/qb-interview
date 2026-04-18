@@ -5,15 +5,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="citystatecountry.db-journal" />
+    <None Remove="..\citystatecountry.db-journal" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="TEST\**\*.cs" />
-    <EmbeddedResource Remove="TEST\**\*" />
-    <None Remove="TEST\**\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="citystatecountry.db">
+    <None Update="..\citystatecountry.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Config\**">

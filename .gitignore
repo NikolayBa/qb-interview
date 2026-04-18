@@ -1,4 +1,12 @@
 Backend.sln.DotSettings.user
-.vs/Backend
-bin/Debug/net8.0
-obj
+# Build artifacts
+**/[Bb]in/
+**/[Oo]bj/
+
+# IDE and user-specific files
+.vs/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
