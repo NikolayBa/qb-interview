@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Backend.Services.CountryNormalization
 {
-	internal interface ICountryNormalizationService
+	public interface ICountryNormalizationService
 	{
+		string NormalizeCountryName(string countryName);
 	}
 }

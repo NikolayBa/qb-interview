@@ -1,16 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Text.Json;
 
 namespace Backend.Services.CountryNormalization
 {
-	internal class CountryNormalizationService
+	public class CountryNormalizationService : ICountryNormalizationService
 	{
-		string Normalize(string country)
+		private readonly Dictionary<string, string> _mappings;
+
+		public CountryNormalizationService()
 		{
-			return Isostrin;
+			string configPath = Path.Combine(AppContext.BaseDirectory, "Config", "CountryMappingConfig.json");
+			string json = File.ReadAllText(configPath);
+			_mappings = JsonSerializer.Deserialize<Dictionary<string, string>>(json,
+				new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+				?? [];
+		}
+
+		public string NormalizeCountryName(string countryName)
+		{
+			if (string.IsNullOrWhiteSpace(countryName))
+			{
+				return string.Empty;
+			}
+
+			if (_mappings.TryGetValue(countryName, out string? mapped))
+			{
+				return mapped;
+			}
+
+			return countryName;
 		}
 	}
 }

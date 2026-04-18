@@ -1,8 +1,30 @@
 # Solution for #githublink Quickbase interview
 # Nikolay Babev
+agenda
+
+Problem
+Assumptions, consideration
+
+
+Challanges:
+Data aggegation differences
+SQLLite
+Lightweight solution
+Code clarity
 
 Solution:
 
+o(n + m)
+Parsing Aggretator
+
+
+parameters
+includeTerritories
+
+unit tests
+Integration Tests
+
+comments in the code
 
 How to run the project:
 
