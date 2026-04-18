@@ -1,6 +1,7 @@
 using Backend.Services.CountryNormalization;
 using Backend.Services.Database;
 using Backend.Services.StatService;
+using Moq;
 
 namespace Backend.Tests;
 
@@ -21,10 +22,28 @@ public class CountryPopulationAggregatorTests
             Tuple.Create("Chile", 17094270)
         };
 
+        var statServiceMock = new Mock<IStatService>(MockBehavior.Strict);
+        statServiceMock
+            .Setup(service => service.GetCountryPopulationsAsync())
+            .ReturnsAsync(apiData);
+
+        var dbServiceMock = new Mock<IDbService>(MockBehavior.Strict);
+        dbServiceMock
+            .Setup(service => service.GetCountryPopulationFromDbAsync())
+            .ReturnsAsync(dbData);
+
+        var countryNormalizationServiceMock = new Mock<ICountryNormalizationService>(MockBehavior.Strict);
+        countryNormalizationServiceMock
+            .Setup(service => service.NormalizeCountryName("United States of America"))
+            .Returns("U.S.A.");
+        countryNormalizationServiceMock
+            .Setup(service => service.NormalizeCountryName("Chile"))
+            .Returns("Chile");
+
         var aggregator = new CountryPopulationAggregator(
-            new FakeStatService(apiData),
-            new FakeDbService(dbData),
-            new FakeCountryNormalizationService());
+            statServiceMock.Object,
+            dbServiceMock.Object,
+            countryNormalizationServiceMock.Object);
 
         using var output = new StringWriter();
         var originalConsoleOut = Console.Out;
@@ -45,39 +64,10 @@ public class CountryPopulationAggregatorTests
         Assert.DoesNotContain("U.S.A.: 309349689", text);
         Assert.Contains("Chile: 17094270", text);
         Assert.Contains("India: 100", text);
-    }
 
-    private sealed class FakeStatService : IStatService
-    {
-        private readonly List<Tuple<string, int>> _data;
-
-        public FakeStatService(List<Tuple<string, int>> data)
-        {
-            _data = data;
-        }
-
-        public List<Tuple<string, int>> GetCountryPopulations() => _data;
-
-        public Task<List<Tuple<string, int>>> GetCountryPopulationsAsync() => Task.FromResult(_data);
-    }
-
-    private sealed class FakeDbService : IDbService
-    {
-        private readonly Dictionary<string, long> _data;
-
-        public FakeDbService(Dictionary<string, long> data)
-        {
-            _data = data;
-        }
-
-        public Task<Dictionary<string, long>> GetCountryPopulationFromDbAsync() => Task.FromResult(_data);
-    }
-
-    private sealed class FakeCountryNormalizationService : ICountryNormalizationService
-    {
-        public string NormalizeCountryName(string countryName)
-        {
-            return countryName == "United States of America" ? "U.S.A." : countryName;
-        }
+        statServiceMock.Verify(service => service.GetCountryPopulationsAsync(), Times.Once);
+        dbServiceMock.Verify(service => service.GetCountryPopulationFromDbAsync(), Times.Once);
+        countryNormalizationServiceMock.Verify(service => service.NormalizeCountryName("United States of America"), Times.Once);
+        countryNormalizationServiceMock.Verify(service => service.NormalizeCountryName("Chile"), Times.Once);
     }
 }
