@@ -2,6 +2,7 @@ using Backend.Services.CountryNormalization;
 
 namespace Backend.Tests;
 
+[Collection("CountryNormalization")]
 public class CountryNormalizationServiceTests
 {
     [Theory]
