@@ -5,10 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="..\citystatecountry.db-journal" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="..\citystatecountry.db">
+    <None Update="citystatecountry.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Config\**">
