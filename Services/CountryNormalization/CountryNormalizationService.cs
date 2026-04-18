@@ -25,7 +25,7 @@ namespace Backend.Services.CountryNormalization
 				return string.Empty;
 			}
 
-			if (_mappings.TryGetValue(countryName, out string? mapped))
+			if (_mappings.TryGetValue(countryName, out var mapped))
 			{
 				return mapped;
 			}

@@ -15,8 +15,24 @@ Code clarity
 Solution:
 
 o(n + m)
-Parsing Aggretator
+Parsing Aggregator
 
+Updating
+
+Best Practices that were followed:
+Using Dapper Instead of EF, as it's more lightweight
+
+Using Async/Await and Tasks on services - eg the DB call and the API call are happening simultaneously
+
+DI for easier testing, and modern best practice
+
+Using Dictionary for O(1) for fast o(1) access
+
+Mapping values based on a Config
+Extendable 
+
+Bonus:
+IncludeInTerritories 
 
 parameters
 includeTerritories
@@ -46,6 +62,7 @@ export to qb
 
 #Solution:
 
+The solution 
 Indexes are added to optimize the query execution. On the current dataset they are optional, but suitable for big projects
 New Table is added to the database to save the results for further execution
 
