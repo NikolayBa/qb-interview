@@ -11,6 +11,7 @@ namespace Backend.Services.CountryNormalization
 
 		public CountryNormalizationService()
 		{
+			// storing the mapping as separate config under config folder
 			string configPath = Path.Combine(AppContext.BaseDirectory, "Config", "CountryMappingConfig.json");
 			string json = File.ReadAllText(configPath);
 			_mappings = JsonSerializer.Deserialize<Dictionary<string, string>>(json,

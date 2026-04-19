@@ -15,6 +15,7 @@ Merge population data from different data sources, while keeping the source of t
 The implementation is achieved using a dictionary to map the values based with time complexity
 o(n + m) where n is the database size and m is the api results size.
 
+Sorting the country alphabetically for clear output (sorting all countries and territories would be fast) 
 
 ### Best Practices that were followed:
 - Using Dapper and Raw SQL Instead of EF for a quick and lightweight query and db mapping
@@ -34,6 +35,7 @@ o(n + m) where n is the database size and m is the api results size.
 ## Assumptions:
 
 Data consitency for Country Names that are stored in the database - No duplicate names within the DB as they are used for a Key in the dictionary.
+The case is handled gracefully and invalid values are logged
 
 Overseas territories are counted as separate entities. Eg Mayotte's population is not counted towards France mainland population, as national statistics do.
 

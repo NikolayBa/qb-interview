@@ -2,7 +2,6 @@
 using Backend.Services.Database;
 using Backend.Services.StatService;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
