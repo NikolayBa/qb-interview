@@ -9,18 +9,10 @@ public class SqliteDbManager : IDbManager
 {
 	public DbConnection GetConnection()
 	{
-		try
-		{
-			var dbPath = GetDatabasePath();
-			var connection = new SqliteConnection($"Data Source={dbPath};Mode=ReadWrite");
-			connection.Open();
-			return connection;
-		}
-		catch (SqliteException ex)
-		{
-			Console.WriteLine(ex.Message);
-			return null;
-		}
+		var dbPath = GetDatabasePath();
+		var connection = new SqliteConnection($"Data Source={dbPath};Mode=ReadWrite");
+		connection.Open();
+		return connection;
 	}
 
 	// adding this so the project runs from the root directory with dotnet run --project Backend/Backend.csproj
