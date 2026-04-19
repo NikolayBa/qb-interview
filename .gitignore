@@ -15,3 +15,5 @@ Backend.sln.DotSettings.user
 Backend/logs/
 /logs/
 *.log
+
+.github/
